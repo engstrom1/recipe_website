@@ -13,4 +13,4 @@ def searchPage(request):
 
 def indexPage(request) :
     # will include about the website  
-    return render(request, 'recipe_pages/about.html')
+    return render(request, 'recipe_pages/index.html')
