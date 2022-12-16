@@ -6,7 +6,7 @@ from .models import Recipe
 def uploadPage(request) :
     if request.method =='POST':
         new_recipe = Recipe()
-        new_recipe.recipe_title = request.POST.get('recipe_title')
+        new_recipe.recipe_title = request.POST.get('recipe_title').lower()
         new_recipe.ingredients = request.POST.get('ingredient_name')
         new_recipe.preparation = request.POST.get('preparation')
         new_recipe.link = request.POST.get('recipe_link')
@@ -33,7 +33,7 @@ def uploadPage(request) :
 
 def searchPage(request) :
     if request.method == 'POST' :
-        title = request.POST.get("recipe_title")
+        title = request.POST.get("recipe_title").lower()
         data = Recipe.objects.filter(recipe_title__contains=title).all()
         if len(data) > 0:
             context = {
