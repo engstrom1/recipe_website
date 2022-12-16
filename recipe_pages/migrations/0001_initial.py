@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('recipe_title', models.CharField(max_length=100)),
                 ('preparation', models.TextField()),
-                ('notes', models.TextField(blank=True)),
+                ('ingredients', models.TextField(blank=True)),
                 ('author', models.CharField(blank=True, max_length=100)),
                 ('link', models.SlugField(blank=True)),
                 ('image', models.ForeignKey(blank=True, on_delete=django.db.models.deletion.DO_NOTHING, to='recipe_pages.image')),

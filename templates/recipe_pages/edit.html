@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Upload</title>
+        <title>Edit</title>
         <link rel="icon" type="image/x-icon" href={% static "assets/favicon_recipes.ico" %} />
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
@@ -20,17 +20,16 @@
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
             <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href={% url "index" %}>Family Recipe Database</a> 
+                <a class="navbar-brand" href={% url "index" %}>Family Recipe Database</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     Menu
                     <i class="fas fa-bars"></i>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarResponsive" >
-
+                <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url "index" %}>Home</a></li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href=#upload>Upload Recipes</a></li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url 'searchPage' %}>Search Recipes</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url "index"%}>Home</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url "uploadPage"%}>Upload Recipes</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href={% url "searchPage"%}>Search Recipes</a></li>
                     </ul>
                 </div>
             </div>
@@ -41,8 +40,8 @@
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <div class="page-heading">
-                            <h1>Upload Here!</h1>
-                            <span class="subheading">Input your recipes here.</span>
+                            <h1>Edit Here!</h1>
+                            <span class="subheading">Edit your recipes here.</span>
                         </div>
                     </div>
                 </div>
@@ -53,41 +52,55 @@
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
-                        <p>Please fill out the following information and click the Save button to upload your recipe.</p>
+                        {% comment %} <p>Please fill out the following information and click the Save button to upload your recipe.</p>
                         <div class="my-5">
-                            <!-- * * * * * * * * * * * * * * *-->
-                            <!-- * * SB Forms Contact Form  * *-->
-                            <!-- * * * * * * * * * * * * * * *-->
-                            <!-- This form is pre-integrated with SB Forms.-->
-                            <!-- To make this form functional, sign up at-->
-                            <!-- https://startbootstrap.com/solution/contact-forms-->
-                            <!-- to get an API token!-->
-                            <!-- <form id="contactForm" data-sb-form-api-token="API_TOKEN"> -->
-                            <form name="form" method="post" action="{% url 'uploadPage' %}">
+
+                            <form name="form" method="post" action="{% url 'editPage' %}">
+                                {% csrf_token %}
+                                <div class="form-floating">
+                                    <label for="recipe_title">Recipe Title</label>
+                                    <input class="form-control" id="recipe_title" type="text" name="recipe_title" placeholder="Enter recipe name..."/>
+                                    
+                                    <div class="invalid-feedback" data-sb-feedback="name:required">A recipe name is required.</div>
+                                </div>
+                                <button id="submitButton" type="submit">Save</button>
+                            </form> {% endcomment %}
+                            <style>
+                                form.editForm {
+                                    display: inline;
+                                }
+                            </style>
+                            <form class="editForm" name="form" method="post" action="{% url 'edit' recipe_name=record.recipe_title %}">
                                 {% csrf_token %}
                                 <div class="form-floating">
                                     <label for="recipe_title">Recipe Title</label><br>
-                                    <input class="form-control" id="recipe_title" type="text" name="recipe_title" placeholder="Enter recipe name..."/>
+                                    <input class="form-control" id="recipe_title" type="text" name="recipe_title" value="{{record.recipe_title}}"/>
                                     
                                     <div class="invalid-feedback" data-sb-feedback="name:required">A recipe name is required.</div>
                                 </div>
                                 <br>
                                 <div class="form-floating">
                                     <label for="ingredient_name">Ingredient Name and Measurement</label><br>
-                                    <textarea class="form-control" id="ingredient_name" type="text" name="ingredient_name" placeholder="Enter information here..." style="height: 12rem"></textarea>
+                                    <input class="form-control" id="ingredient_name" type="text" name="ingredient_name" value="{{record.ingredients}}" style="height: 12rem">
                                 </div>
                                 <br>
                                 <div class="form-floating">
                                     <label for="preparation">Preparation</label><br>
-                                    <textarea class="form-control" id="preparation" name="preparation" placeholder="Enter your preparation here..." style="height: 12rem"></textarea> <!--style="height: 12rem"-->
+                                    <input class="form-control" id="preparation" name="preparation"  value="{{record.preparation}}" style="height: 12rem"><!--style="height: 12rem"-->
                                     <div class="invalid-feedback" data-sb-feedback="message:required">A message is required.</div>
                                 </div>
                                 <br>
                                 <div class="form-floating">
                                     <label for="recipe_link">Recipe Link</label><br>
-                                    <input class="form-control" id="recipe_link" type="text" name="recipe_link" placeholder="Enter Recipe" />
+                                    <input class="form-control" id="recipe_link" type="text" name="recipe_link" value="{{record.link}}" />
                                 </div>
                                 <br>
+                                {% comment %} <div class="form-floating">
+                                    <label for="recipe_link">Recipe Link</label><br>
+                                    <input class="form-control" id="image" type="text" name="image" value="{{record.link}}" />
+                                </div>
+                                <br> {% endcomment %}
+
                                 <!-- <div class="form-floating">
                                     <label for="recipe_image">Recipe Image</label>
                                     <input class="form-control" id="recipe_image" type="file" name="recipe_image" placeholder="Upload Image" accept="image/png, image/jpeg, image/jpg"/>
@@ -95,59 +108,21 @@
                                 <br> -->
                                 <div class="form-floating">
                                     <label for="notes">Notes</label><br>
-                                    <textarea class="form-control" id="notes" type="text" name="notes" placeholder="Enter your notes here..." style="height: 12rem" ></textarea>
+                                    <input class="form-control" id="notes" type="text" name="notes" value="{{record.notes}}" style="height: 12rem" >
                                     
                                 </div>
                                 <br />
                                 <div class="form-floating">
                                     <label for="author">Author</label><br>
-                                    <input class="form-control" id="author" type="text" name="author" placeholder="Author Name" />
+                                    <input class="form-control" id="author" type="text" name="author" value="{{record.author}}" />
                                     
                                 </div>
                                 <br>
-                                <button class="btn btn-primary text-uppercase" id="submitButton" type="submit">Save</button>
+                                <button class="btn btn-success text-uppercase" id="submitButton" type="submit" >Save New Version</button>
                             </form>
-                                <!-- <div class="form-floating">
-                                    <label for="recipe_image">Recipe Image</label>
-                                    <input class="form-control" id="name" type="text" name="recipe_image" placeholder="Enter ingredient measurement..." />
-                                    
-                                </div>
-                                <br> -->
-                                <!-- <div class="form-floating">
-                                    <label for="email">Email address</label>
-                                    <input class="form-control" id="email" type="text" name="email" placeholder="Enter your email..."/>
-                                    
-                                    <div class="invalid-feedback" data-sb-feedback="email:required">An email is required.</div>
-                                    <div class="invalid-feedback" data-sb-feedback="email:email">Email is not valid.</div>
-                                </div>
-                                <br>
-                                <div class="form-floating">
-                                    <label for="phone">Phone Number</label>
-                                    <input class="form-control" id="phone" type="text" name="phone" placeholder="Enter your phone number..."/>
-                                    <div class="invalid-feedback" data-sb-feedback="phone:required">A phone number is required.</div>
-                                </div>
-                                <br> -->
-
-
-                                <!-- Submit success message
-                                
-                                This is what your users will see when the form
-                                has successfully submitted
-                                <div class="d-none" id="submitSuccessMessage">
-                                    <div class="text-center mb-3">
-                                        <div class="fw-bolder">Recipe submission successful!</div>
-                                        To activate this form, sign up at
-                                        <br />
-                                        <a href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
-                                    </div>
-                                </div>
-                                Submit error message
-                                
-                                This is what your users will see when there is
-                                an error submitting the form
-                                <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error saving message!</div></div>
-                                Submit Button-->
-
+                            <a href="{% url 'index' %}"> 
+                                <button class="btn btn-primary text-uppercase" id="backButton">Back</button>
+                            </a>
                         </div>
                     </div>
                 </div>
